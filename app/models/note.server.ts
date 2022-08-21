@@ -11,7 +11,7 @@ export function getNote({
   userId: User["id"];
 }) {
   return prisma.note.findFirst({
-    select: { id: true, body: true, title: true },
+    select: { id: true, },
     where: { id, userId },
   });
 }
@@ -19,22 +19,18 @@ export function getNote({
 export function getNoteListItems({ userId }: { userId: User["id"] }) {
   return prisma.note.findMany({
     where: { userId },
-    select: { id: true, title: true, createdAt: true },
+    select: { id: true, createdAt: true },
     orderBy: { updatedAt: "desc" },
   });
 }
 
 export function createNote({
-  body,
-  title,
   userId,
-}: Pick<Note, "body" | "title"> & {
+}: {
   userId: User["id"];
 }) {
   return prisma.note.create({
     data: {
-      title,
-      body,
       user: {
         connect: {
           id: userId,
