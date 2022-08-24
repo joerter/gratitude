@@ -1,8 +1,9 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
 import { getPrompts } from "~/models/prompts.server";
+import { createNote } from "~/models/note.server";
 
 export async function loader() {
   const prompts = await getPrompts();
@@ -15,12 +16,12 @@ export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
   const promptIds = formData.get('prompts') as string;
   const answers = promptIds.split(',').map(id => ({
-    markdown: formData.get(id),
+    markdown: formData.get(id)?.toString() ?? '',
     promptId: id,
   }));
-  console.log(answers);
 
-  //const note = await createNote({ userId });
+  const note = await createNote({ userId, answers });
+  console.log('created note', note)
 
   return redirect(`/notes`);
 }

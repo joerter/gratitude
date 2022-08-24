@@ -1,4 +1,4 @@
-import type { User, Note } from "@prisma/client";
+import type { User, Note, Answer } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -26,17 +26,25 @@ export function getNoteListItems({ userId }: { userId: User["id"] }) {
 
 export function createNote({
   userId,
+  answers
 }: {
   userId: User["id"];
+  answers: Pick<Answer, "markdown" | "promptId">[];
 }) {
   return prisma.note.create({
     data: {
+      answers: { 
+        create: answers,
+      },
       user: {
         connect: {
           id: userId,
         },
       },
     },
+    include: {
+      answers: true,
+    }
   });
 }
 

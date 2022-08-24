@@ -4,6 +4,10 @@ const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
 async function seed() {
+  await prisma.note.deleteMany();
+  await prisma.prompt.deleteMany();
+  await prisma.answer.deleteMany();
+
   const email = "rachel@remix.run";
 
   // cleanup the existing database
