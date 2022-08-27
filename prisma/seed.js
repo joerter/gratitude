@@ -28,21 +28,21 @@ async function seed() {
     },
   });
 
-  await prisma.prompt.create({
-    data: {
-      text: 'What am I thankful for that happened yesterday?'
-    }
-  });
-  await prisma.prompt.create({
-    data: {
-      text: 'What am I looking forward to today?'
-    }
-  });
-  await prisma.prompt.create({
-    data: {
-      text: 'What am I working on at work today?'
-    }
-  });
+  // await prisma.prompt.create({
+  //   data: {
+  //     text: 'What am I thankful for that happened yesterday?'
+  //   }
+  // });
+  // await prisma.prompt.create({
+  //   data: {
+  //     text: 'What am I looking forward to today?'
+  //   }
+  // });
+  // await prisma.prompt.create({
+  //   data: {
+  //     text: 'What am I working on at work today?'
+  //   }
+  // });
 
   console.log(`Database has been seeded. 🌱`);
 }

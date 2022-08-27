@@ -5,3 +5,11 @@ export function getPrompts() {
     select: { id: true, text: true },
   });
 }
+
+export function createPrompt(prompt: string) {
+  return prisma.prompt.create({
+    data: {
+      text: prompt
+    }
+  });
+}
