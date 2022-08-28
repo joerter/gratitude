@@ -1,11 +1,16 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useCatch, useLoaderData } from "@remix-run/react";
+import type { LoaderArgs } from "@remix-run/node";
+import { marked } from "marked";
+import { json } from "@remix-run/node";
+import { useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { deleteNote } from "~/models/note.server";
 import { getNote } from "~/models/note.server";
 import { requireUserId } from "~/session.server";
+
+type LoaderData = {
+  date: string;
+  answers: { prompt: string; answerHtml: string }[];
+};
 
 export async function loader({ request, params }: LoaderArgs) {
   const userId = await requireUserId(request);
@@ -15,16 +20,22 @@ export async function loader({ request, params }: LoaderArgs) {
   if (!note) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json({ note });
-}
 
-export async function action({ request, params }: ActionArgs) {
-  const userId = await requireUserId(request);
-  invariant(params.noteId, "noteId not found");
+  const date = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(note.createdAt));
 
-  await deleteNote({ userId, id: params.noteId });
-
-  return redirect("/notes");
+  const data: LoaderData = {
+    date,
+    answers: note.answers.map((a) => ({
+      prompt: a.prompt.text,
+      answerHtml: marked(a.markdown),
+    })),
+  };
+  return json<LoaderData>(data);
 }
 
 export default function NoteDetailsPage() {
@@ -32,17 +43,14 @@ export default function NoteDetailsPage() {
 
   return (
     <div>
-      <h3 className="text-2xl font-bold">Title</h3>
-      <p className="py-6">Body</p>
+      <h3 className="text-2xl font-bold">{data.date}</h3>
+      {data.answers.map((a, i) => (
+        <div key={i}>
+          <h5 className="text-xl font-bold">{a.prompt}</h5>
+          <div dangerouslySetInnerHTML={{ __html: a.answerHtml }} />
+        </div>
+      ))}
       <hr className="my-4" />
-      <Form method="post">
-        <button
-          type="submit"
-          className="rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-        >
-          Delete
-        </button>
-      </Form>
     </div>
   );
 }

@@ -1,9 +1,12 @@
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { getPrompts } from "~/models/prompts.server";
+import { requireUserId } from "~/session.server";
 
-export async function loader() {
-  const prompts = await getPrompts();
+export async function loader({ request }: LoaderArgs) {
+  const userId = await requireUserId(request);
+  const prompts = await getPrompts({ userId });
   return json({ prompts });
 }
 

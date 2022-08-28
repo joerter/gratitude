@@ -11,8 +11,14 @@ export function getNote({
   userId: User["id"];
 }) {
   return prisma.note.findFirst({
-    select: { id: true, },
     where: { id, userId },
+    include: {
+      answers: {
+        include: {
+          prompt: true,
+        },
+      }
+    }
   });
 }
 
@@ -26,14 +32,14 @@ export function getNoteListItems({ userId }: { userId: User["id"] }) {
 
 export function createNote({
   userId,
-  answers
+  answers,
 }: {
   userId: User["id"];
   answers: Pick<Answer, "markdown" | "promptId">[];
 }) {
   return prisma.note.create({
     data: {
-      answers: { 
+      answers: {
         create: answers,
       },
       user: {
@@ -44,7 +50,7 @@ export function createNote({
     },
     include: {
       answers: true,
-    }
+    },
   });
 }
 

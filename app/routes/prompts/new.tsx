@@ -2,11 +2,14 @@ import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { createPrompt } from "~/models/prompts.server";
+import { requireUserId } from "~/session.server";
 
 export async function action({ request }: ActionArgs) {
+  const userId = await requireUserId(request);
+
   const formData = await request.formData();
-  const prompt = formData.get("prompt") as string;
-  await createPrompt(prompt);
+  const promptText = formData.get("prompt") as string;
+  await createPrompt({ userId, promptText });
   return redirect("/prompts/new");
 }
 
