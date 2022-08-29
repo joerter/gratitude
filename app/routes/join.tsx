@@ -89,12 +89,14 @@ export default function Join() {
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
         <Form method="post" className="space-y-6">
-          <div>
+          <div className="form-control">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="label"
             >
-              Email address
+              <span className="label-text">
+                Email address
+              </span>
             </label>
             <div className="mt-1">
               <input
@@ -107,7 +109,7 @@ export default function Join() {
                 autoComplete="email"
                 aria-invalid={actionData?.errors?.email ? true : undefined}
                 aria-describedby="email-error"
-                className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
+                className="input input-bordered w-full"
               />
               {actionData?.errors?.email && (
                 <div className="pt-1 text-red-700" id="email-error">
@@ -117,12 +119,14 @@ export default function Join() {
             </div>
           </div>
 
-          <div>
+          <div className="form-control">
             <label
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
-              Password
+              <span className="label-text">
+                Password
+              </span>
             </label>
             <div className="mt-1">
               <input
@@ -133,7 +137,7 @@ export default function Join() {
                 autoComplete="new-password"
                 aria-invalid={actionData?.errors?.password ? true : undefined}
                 aria-describedby="password-error"
-                className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
+                className="input input-bordered w-full"
               />
               {actionData?.errors?.password && (
                 <div className="pt-1 text-red-700" id="password-error">
@@ -146,7 +150,7 @@ export default function Join() {
           <input type="hidden" name="redirectTo" value={redirectTo} />
           <button
             type="submit"
-            className="w-full rounded bg-blue-500  py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+            className="btn btn-primary btn-block"
           >
             Create Account
           </button>

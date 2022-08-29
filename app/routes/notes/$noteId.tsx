@@ -42,15 +42,15 @@ export default function NoteDetailsPage() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <div>
-      <h3 className="text-2xl font-bold">{data.date}</h3>
+    <div className="prose prose-slate lg:prose-xl">
+      <h1>{data.date}</h1>
       {data.answers.map((a, i) => (
-        <div key={i}>
-          <h5 className="text-xl font-bold">{a.prompt}</h5>
+        <div key={i} className="rounded-box">
+          <h2 className="my-2">{a.prompt}</h2>
           <div dangerouslySetInnerHTML={{ __html: a.answerHtml }} />
+          <div className="divider"></div>
         </div>
       ))}
-      <hr className="my-4" />
     </div>
   );
 }
