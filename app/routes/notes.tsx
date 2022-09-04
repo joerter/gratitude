@@ -1,5 +1,4 @@
-import { Form, Link, Outlet } from "@remix-run/react";
-
+import { Form, Outlet } from "@remix-run/react";
 import { useUser } from "~/utils";
 
 export default function NotesPage() {
@@ -7,15 +6,13 @@ export default function NotesPage() {
 
   return (
     <div className="flex h-full min-h-screen flex-col">
-      <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
-        <h1 className="text-3xl font-bold">
-          <Link to=".">Notes</Link>
-        </h1>
+      <header className="flex items-center justify-between navbar bg-primary text-primary-content">
+        <a className="btn btn-ghost normal-case text-xl">Gratitude</a>
         <p>{user.email}</p>
         <Form action="/logout" method="post">
           <button
             type="submit"
-            className="rounded bg-slate-600 py-2 px-4 text-blue-100 hover:bg-blue-500 active:bg-blue-600"
+            className="py-2 px-4 btn btn-accent"
           >
             Logout
           </button>
