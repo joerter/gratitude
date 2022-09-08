@@ -43,10 +43,10 @@ export default function NoteDetailsPage() {
 
   return (
     <div className="prose prose-slate lg:prose-xl">
-      <h1>{data.date}</h1>
+      <h1 className="text-center">{data.date}</h1>
       {data.answers.map((a, i) => (
         <div key={i} className="rounded-box">
-          <h2 className="my-2">{a.prompt}</h2>
+          <h2 className="my-2 text-center underline decoration-primary decoration-4">{a.prompt}</h2>
           <div dangerouslySetInnerHTML={{ __html: a.answerHtml }} />
           <div className="divider"></div>
         </div>

@@ -8,7 +8,15 @@ import { createNote } from "~/models/note.server";
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request);
   const prompts = await getPrompts({ userId });
-  return json({ prompts });
+
+  const date = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date());
+
+  return json({ prompts, date });
 }
 
 export async function action({ request }: ActionArgs) {
@@ -31,37 +39,41 @@ export default function NewNotePage() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <Form
-      method="post"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
-        width: "100%",
-      }}
-    >
-      {data.prompts.map((p, i) => (
-        <div key={i}>
-          <label className="flex w-full flex-col gap-1" htmlFor={p.id}>
-            {p.text}
-          </label>
-          <textarea id={p.id} name={p.id} cols={30} rows={10}></textarea>
+      <Form
+        method="post"
+        className="h-full w-full py-5 flex flex-col justify-between"
+      >
+        <h2 className="text-center">{data.date}</h2>
+        <div className="grow">
+          {data.prompts.map((p, i) => (
+            <div>
+              <div key={i} className="form-control my-5">
+                <label className="label text-lg font-bold text-center justify-center underline decoration-primary decoration-4" htmlFor={p.id}>
+                  {p.text}
+                </label>
+                <textarea
+                  className="textarea textarea-bordered"
+                  id={p.id}
+                  name={p.id}
+                  rows={20}
+                ></textarea>
+              </div>
+              <div className="divider"></div>
+            </div>
+          ))}
+          <input
+            type="hidden"
+            name="prompts"
+            value={data.prompts.map((p) => p.id).join()}
+          />
         </div>
-      ))}
-      <input
-        type="hidden"
-        name="prompts"
-        value={data.prompts.map((p) => p.id).join()}
-      />
-
-      <div className="text-right">
+        
         <button
           type="submit"
-          className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
+          className="btn btn-primary btn-block mt-5"
         >
           Save
         </button>
-      </div>
-    </Form>
+      </Form>
   );
 }
